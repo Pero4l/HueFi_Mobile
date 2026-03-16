@@ -29,10 +29,14 @@ async function usersCreation(req, res) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-        
-        const user = await Users.create({ username, email, password: hashedPassword });
-        res.status(201).json(user);
+        await Users.create({ username, email, password: hashedPassword });
+
+        res.status(201).json({ success: true, message: "User created successfully" });
+
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        
+        res.status(500).json({ success: false, message: "User creation failed", error: error.message });
     }
 }
+
+module.exports = { usersCreation };
