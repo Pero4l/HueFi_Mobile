@@ -8,6 +8,20 @@ async function usersCreation(req, res) {
         return res.status(400).json({ error: "All fields are required" });
     }
 
+      if (password.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
+    } else if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
+      return res.status(400).json({ message: "Password must contain both uppercase and lowercase letters" });
+    } else if (!/[0-9]/.test(password)) {
+      return res.status(400).json({ message: "Password must contain a number" });
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    } else if (username.length < 4) {
+      return res.status(400).json({ message: "Username must be at least 4 characters" });
+    }
+
+    
+
     try {
         
         const user = await Users.create({ username, email, password });
