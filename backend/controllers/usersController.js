@@ -20,7 +20,10 @@ async function usersCreation(req, res) {
       return res.status(400).json({ message: "Username must be at least 4 characters" });
     }
 
-    
+    const existingUser = await Users.findOne({ where: { email } });
+    if (existingUser) {
+        return res.status(400).json({ message: "User already exists" });
+    }
 
     try {
         
