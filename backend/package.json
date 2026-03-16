@@ -13,6 +13,7 @@
     "bcrypt": "^6.0.0",
     "express": "^5.2.1",
     "nodemon": "^3.1.14",
-    "sequelize": "^6.37.8"
+    "sequelize": "^6.37.8",
+    "sequelize-cli": "^6.6.5"
   }
 }
