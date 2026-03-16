@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      leaderboard.belongsTo(models.Users, {
+        foreignKey: 'user_id',
+        as: 'user'
+      });
     }
   }
   leaderboard.init({

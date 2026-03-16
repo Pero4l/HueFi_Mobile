@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Users.hasOne(models.leaderboard, {
+        foreignKey: 'user_id',
+        as: 'leaderboard'
+      });
     }
   }
   Users.init({
