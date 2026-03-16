@@ -1,4 +1,5 @@
 const { Users } = require("../models");
+const bcrypt = require("bcrypt");
 
 async function usersCreation(req, res) {
 
