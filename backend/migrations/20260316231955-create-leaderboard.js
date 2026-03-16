@@ -7,22 +7,23 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.literal('gen_random_uuid()')
       },
       user_id: {
-        type: Sequelize.STRING
+        type: Sequelize.UUID
       },
-      phone: {
-        type: Sequelize.STRING
-      },
-      image: {
-        type: Sequelize.STRING
-      },
-      bio: {
+      username: {
         type: Sequelize.STRING
       },
       address: {
         type: Sequelize.STRING
+      },
+      points: {
+        type: Sequelize.INTEGER
+      },
+      rank: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
