@@ -34,9 +34,52 @@ async function usersCreation(req, res) {
         res.status(201).json({ success: true, message: "User created successfully" });
 
     } catch (error) {
-        
+
         res.status(500).json({ success: false, message: "User creation failed", error: error.message });
     }
+} 
+
+async function usersLogin(req, res) {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ error: "All fields are required" });
+    }   
+
+    const user = await Users.findOne({ where: { email } });
+    if (!user) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+        return res.status(401).json({ error: "Invalid password" });
+    }
+
+    res.status(200).json({ success: true, message: "User logged in successfully" });
 }
 
-module.exports = { usersCreation };
+// async function forgotPassword(req, res) {
+//     const { email } = req.body;
+
+//     if (!email) {
+//         return res.status(400).json({ error: "All fields are required" });
+//     }
+
+//     const user = await Users.findOne({ where: { email } });
+//     if (!user) {
+//         return res.status(404).json({ error: "User not found" });
+//     }
+
+//     const resetToken = crypto.randomBytes(32).toString("hex");
+//     const resetTokenExpiry = Date.now() + 15 * 60 * 1000;
+
+//     user.resetToken = resetToken;
+//     user.resetTokenExpiry = resetTokenExpiry;
+
+//     await user.save();
+
+//     res.status(200).json({ success: true, message: "Password reset link sent successfully" });
+// }
+
+module.exports = { usersCreation, usersLogin };
