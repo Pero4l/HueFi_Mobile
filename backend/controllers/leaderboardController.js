@@ -22,10 +22,16 @@ async function getLeaderboard(req, res) {
     try {
         const topUsers = await leaderboard.findAll({
             order: [['points', 'DESC']],
-            limit: 50
+            limit: 50,
+            raw: true
         });
 
-        res.status(200).json({ success: true, data: topUsers });
+        const rankedUsers = topUsers.map((user, index) => ({
+            ...user,
+            rank: index + 1
+        }));
+
+        res.status(200).json({ success: true, data: rankedUsers });
     } catch (error) {
         res.status(500).json({ success: false, message: "Failed to fetch leaderboard", error: error.message });
     }
