@@ -1,5 +1,6 @@
 const { Users } = require("../models");
 const { Op } = require("sequelize");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
 async function usersCreation(req, res) {
@@ -61,17 +62,20 @@ async function usersLogin(req, res) {
 
      const token = jwt.sign(
     {
-      userId: req.data.id,
-      currentUser: `${req.data.first_name} ${req.data.last_name}`,
-      location: `${req.data.state}, ${req.data.country}`,
-      email: `${req.data.email}`
+      user_id: user.id,
+      currentUser: `FullName:${user.fullname}, UserName:${user.username}`,
+      email: `${user.email}`
     },
     process.env.JWT_SECRET,
     { expiresIn: "24h" }
   );
 
 
-    res.status(200).json({ success: true, message: "User logged in successfully" });
+    res.status(200).json({ 
+      success: true, 
+      message: "User logged in successfully",
+      token: token
+    });
 }
 
 // async function forgotPassword(req, res) {
