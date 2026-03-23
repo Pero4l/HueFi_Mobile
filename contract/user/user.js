@@ -18,6 +18,6 @@ const derivedSeed = derivePath(path, seed.toString("hex")).key;
 const wallet = Keypair.fromSeed(derivedSeed);
 
 // Outputs
-console.log("Mnemonic:", mnemonic);
-console.log("Public Address:", wallet.publicKey.toString());
-console.log("Private Key (secret):", Buffer.from(wallet.secretKey).toString("hex"));
+// console.log("Mnemonic:", mnemonic);
+// console.log("Public Address:", wallet.publicKey.toString());
+// console.log("Private Key (secret):", Buffer.from(wallet.secretKey).toString("hex"));
