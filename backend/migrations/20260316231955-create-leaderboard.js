@@ -13,6 +13,9 @@ module.exports = {
       user_id: {
         type: Sequelize.UUID
       },
+      fullname: {
+        type: Sequelize.STRING
+      },
       username: {
         type: Sequelize.STRING
       },

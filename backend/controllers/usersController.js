@@ -1,11 +1,12 @@
 const { Users } = require("../models");
+const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 
 async function usersCreation(req, res) {
 
-    const { username, email, password } = req.body;
+    const { fullname, username, email, password } = req.body;
 
-    if (!username || !email || !password) {
+    if (!fullname || !username || !email || !password) {
         return res.status(400).json({ error: "All fields are required" });
     }
 
@@ -17,6 +18,8 @@ async function usersCreation(req, res) {
       return res.status(400).json({ message: "Password must contain a number" });
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res.status(400).json({ message: "Invalid email format" });
+    } else if (fullname.length < 4) {
+      return res.status(400).json({ message: "Fullname must be at least 4 characters" });
     } else if (username.length < 4) {
       return res.status(400).json({ message: "Username must be at least 4 characters" });
     }
@@ -40,21 +43,33 @@ async function usersCreation(req, res) {
 } 
 
 async function usersLogin(req, res) {
-    const { email, password } = req.body;
+    const { userLog, password } = req.body;
 
-    if (!email || !password) {
-        return res.status(400).json({ error: "All fields are required" });
+    if (!userLog || !password) {
+        return res.status(400).json({ error: "Email or username and password are required" });
     }   
 
-    const user = await Users.findOne({ where: { email } });
+    const user = await Users.findOne({ where: { [Op.or]: [{ email: userLog }, { username: userLog }] } });
     if (!user) {
         return res.status(404).json({ error: "User not found" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-        return res.status(401).json({ error: "Invalid password" });
+        return res.status(401).json({ error: "Invalid email/username or password" });
     }
+
+     const token = jwt.sign(
+    {
+      userId: req.data.id,
+      currentUser: `${req.data.first_name} ${req.data.last_name}`,
+      location: `${req.data.state}, ${req.data.country}`,
+      email: `${req.data.email}`
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "24h" }
+  );
+
 
     res.status(200).json({ success: true, message: "User logged in successfully" });
 }

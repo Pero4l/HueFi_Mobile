@@ -3,12 +3,12 @@ const { leaderboard } = require("../models");
 async function leaderboardCreation(req, res) {
     const { user_id, username, address, points, rank } = req.body;
 
-    if (!user_id || !username || !address || !points || !rank) {
+    if (!user_id || fullname || !username || !address || !points || !rank) {
         return res.status(400).json({ error: "All fields are required" });
     }
 
     try {
-        await leaderboard.create({ user_id, username, address, points, rank });
+        await leaderboard.create({ user_id, fullname, username, address, points, rank });
 
         res.status(201).json({ success: true, message: "Leaderboard created successfully" });
     } catch (error) {
@@ -16,4 +16,20 @@ async function leaderboardCreation(req, res) {
     }
 }
 
-module.exports = { leaderboardCreation };
+async function leaderboardUpdate(req, res) {
+    const { user_id, username, address, points, rank } = req.body;
+
+    if (!user_id || !username || !address || !points || !rank) {
+        return res.status(400).json({ error: "All fields are required" });
+    }
+
+    try {
+        await leaderboard.update({ user_id, username, address, points, rank }, { where: { user_id } });
+
+        res.status(200).json({ success: true, message: "Leaderboard updated successfully" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Leaderboard update failed", error: error.message });
+    }
+}
+
+module.exports = { leaderboardCreation, leaderboardUpdate };
