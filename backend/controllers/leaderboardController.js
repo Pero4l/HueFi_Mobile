@@ -1,35 +1,34 @@
 const { leaderboard } = require("../models");
 
-async function leaderboardCreation(req, res) {
-    const { user_id, username, address, points, rank } = req.body;
-
-    if (!user_id || fullname || !username || !address || !points || !rank) {
-        return res.status(400).json({ error: "All fields are required" });
-    }
+async function updatePoints(req, res) {
+    const user_id = req.user.user_id;
 
     try {
-        await leaderboard.create({ user_id, fullname, username, address, points, rank });
+        const board = await leaderboard.findOne({ where: { user_id } });
+        if (!board) {
+            return res.status(404).json({ success: false, message: "Leaderboard entry not found" });
+        }
 
-        res.status(201).json({ success: true, message: "Leaderboard created successfully" });
+        board.points += 2;
+        await board.save();
+
+        res.status(200).json({ success: true, message: "Points updated successfully", data: board });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Leaderboard creation failed", error: error.message });
+        res.status(500).json({ success: false, message: "Failed to update points", error: error.message });
     }
 }
 
-async function leaderboardUpdate(req, res) {
-    const { user_id, username, address, points, rank } = req.body;
-
-    if (!user_id || !username || !address || !points || !rank) {
-        return res.status(400).json({ error: "All fields are required" });
-    }
-
+async function getLeaderboard(req, res) {
     try {
-        await leaderboard.update({ user_id, username, address, points, rank }, { where: { user_id } });
+        const topUsers = await leaderboard.findAll({
+            order: [['points', 'DESC']],
+            limit: 50
+        });
 
-        res.status(200).json({ success: true, message: "Leaderboard updated successfully" });
+        res.status(200).json({ success: true, data: topUsers });
     } catch (error) {
-        res.status(500).json({ success: false, message: "Leaderboard update failed", error: error.message });
+        res.status(500).json({ success: false, message: "Failed to fetch leaderboard", error: error.message });
     }
 }
 
-module.exports = { leaderboardCreation, leaderboardUpdate };
+module.exports = { updatePoints, getLeaderboard };

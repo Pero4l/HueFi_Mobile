@@ -5,7 +5,6 @@ module.exports = {
     await queryInterface.createTable('leaderboards', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.literal('gen_random_uuid()')

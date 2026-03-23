@@ -1,4 +1,4 @@
-const { Users } = require("../models");
+const { Users, leaderboard } = require("../models");
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
@@ -10,7 +10,6 @@ async function usersCreation(req, res) {
     if (!fullname || !username || !email || !password) {
         return res.status(400).json({ error: "All fields are required" });
     }
-
       if (password.length < 6) {
       return res.status(400).json({ message: "Password must be at least 6 characters" });
     } else if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
@@ -33,7 +32,16 @@ async function usersCreation(req, res) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-        await Users.create({ username, email, password: hashedPassword });
+        const newUser = await Users.create({ fullname, username, email, password: hashedPassword });
+
+        await leaderboard.create({
+            user_id: newUser.id,
+            fullname: newUser.fullname,
+            username: newUser.username,
+            address: "",
+            points: 0,
+            rank: 0
+        });
 
         res.status(201).json({ success: true, message: "User created successfully" });
 
@@ -42,6 +50,9 @@ async function usersCreation(req, res) {
         res.status(500).json({ success: false, message: "User creation failed", error: error.message });
     }
 } 
+
+
+
 
 async function usersLogin(req, res) {
     const { userLog, password } = req.body;
