@@ -17,7 +17,6 @@ const derivedSeed = derivePath(path, seed.toString("hex")).key;
 // Step 5: Create wallet
 const wallet = Keypair.fromSeed(derivedSeed);
 
-
 // Outputs
 // console.log("Mnemonic:", mnemonic);
 // console.log("Public Address:", wallet.publicKey.toString());
