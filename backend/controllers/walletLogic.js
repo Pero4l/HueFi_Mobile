@@ -82,11 +82,60 @@ async function getTransactions(req, res) {
         const publicKey = new PublicKey(address);
 
         // Fetch up to the last 15 transaction signatures
-        const signatures = await connection.getSignaturesForAddress(publicKey, { limit: 15 });
+        const signaturesInfo = await connection.getSignaturesForAddress(publicKey, { limit: 15 });
+        const signatures = signaturesInfo.map(info => info.signature);
+
+        if (signatures.length === 0) {
+            return res.status(200).json({ success: true, transactions: [] });
+        }
+
+        // Fetch parsed transaction details
+        const parsedTransactions = await connection.getParsedTransactions(signatures, { 
+            maxSupportedTransactionVersion: 0 
+        });
+
+        // Format into readable data
+        const formattedTransactions = parsedTransactions.map((tx, index) => {
+            if (!tx || !tx.meta) return null;
+            
+            // Find the user's account index in this transaction
+            const accountIndex = tx.transaction.message.accountKeys.findIndex(
+                (acc) => acc.pubkey.toString() === address
+            );
+
+            if (accountIndex === -1) return null;
+
+            const preBalance = tx.meta.preBalances[accountIndex] / LAMPORTS_PER_SOL;
+            const postBalance = tx.meta.postBalances[accountIndex] / LAMPORTS_PER_SOL;
+            const balanceChange = postBalance - preBalance;
+            
+            const isFeePayer = accountIndex === 0;
+            const fee = isFeePayer ? (tx.meta.fee / LAMPORTS_PER_SOL) : 0;
+            
+            // Deduct the network fee from the balance change if they sent the transaction
+            let actualTransferAmount = balanceChange;
+            if (isFeePayer && balanceChange < 0) {
+                actualTransferAmount = balanceChange + fee;
+            }
+
+            let type = 'Interact'; // Fallback
+            if (actualTransferAmount > 0) type = 'Receive';
+            else if (actualTransferAmount < 0) type = 'Send';
+
+            return {
+                signature: signatures[index],
+                date: tx.blockTime ? new Date(tx.blockTime * 1000).toLocaleString() : 'Unknown',
+                type,
+                amount: Math.abs(parseFloat(actualTransferAmount.toFixed(9))),
+                fee: fee,
+                status: tx.meta.err ? 'Failed' : 'Success',
+                explorerUrl: `https://solscan.io/tx/${signatures[index]}?cluster=devnet`
+            };
+        }).filter(tx => tx !== null);
 
         return res.status(200).json({
             success: true,
-            transactions: signatures
+            transactions: formattedTransactions
         });
     } catch (error) {
         return res.status(500).json({ success: false, message: "Failed to get transactions", error: error.message });
