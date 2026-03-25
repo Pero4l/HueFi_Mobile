@@ -23,8 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     wallet_address: DataTypes.STRING,
-    wallet_private_key: DataTypes.STRING,
-    wallet_mnemonic: DataTypes.STRING,
+    wallet_private_key: DataTypes.TEXT,
+    wallet_mnemonic: DataTypes.TEXT,
   }, {
     sequelize,
     modelName: 'Users',

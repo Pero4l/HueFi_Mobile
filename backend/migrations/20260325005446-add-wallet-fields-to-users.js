@@ -8,11 +8,11 @@ module.exports = {
       allowNull: true,
     });
     await queryInterface.addColumn('users', 'wallet_private_key', {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
       allowNull: true,
     });
     await queryInterface.addColumn('users', 'wallet_mnemonic', {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
       allowNull: true,
     });
   },

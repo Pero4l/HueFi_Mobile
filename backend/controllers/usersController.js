@@ -3,6 +3,7 @@ const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { generateWallet } = require("../utils/wallet");
+const { encrypt, decrypt } = require("./protect");
 
 async function usersCreation(req, res) {
 
@@ -38,9 +39,9 @@ async function usersCreation(req, res) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const wallet = generateWallet();
     
-    const hashedWalletAddress = await bcrypt.hash(wallet.publicKey, 10);
-    const hashedWalletPrivateKey = await bcrypt.hash(wallet.secretKey, 10);
-    const hashedWalletMnemonic = await bcrypt.hash(wallet.mnemonic, 10);
+    // Encrypt the sensitive wallet keys instead of one-way bcrypt hashing
+    const encryptedWalletPrivateKey = encrypt(wallet.secretKey);
+    const encryptedWalletMnemonic = encrypt(wallet.mnemonic);
 
     try {
 
@@ -49,9 +50,9 @@ async function usersCreation(req, res) {
             username, 
             email, 
             password: hashedPassword,
-            wallet_address: hashedWalletAddress,
-            wallet_private_key: hashedWalletPrivateKey,
-            wallet_mnemonic: hashedWalletMnemonic
+            wallet_address: wallet.publicKey,
+            wallet_private_key: encryptedWalletPrivateKey,
+            wallet_mnemonic: encryptedWalletMnemonic
         });
 
         await leaderboard.create({
@@ -91,21 +92,27 @@ async function usersLogin(req, res) {
         return res.status(401).json({ error: "Invalid email/username or password" });
     }
 
+  
+
      const token = jwt.sign(
     {
       user_id: user.id,
       currentUser: `FullName:${user.fullname}, UserName:${user.username}`,
+      address: user.wallet_address,
+      secretKey: decrypt(user.wallet_private_key),
+      mnemonic: decrypt(user.wallet_mnemonic),
       email: `${user.email}`
     },
     process.env.JWT_SECRET,
-    { expiresIn: "24h" }
+    { expiresIn: "72h" }
   );
 
 
     res.status(200).json({ 
       success: true, 
       message: "User logged in successfully",
-      token: token
+      token: token,
+      // address: address
     });
 }
 
