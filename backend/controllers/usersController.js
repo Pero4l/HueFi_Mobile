@@ -25,18 +25,24 @@ async function usersCreation(req, res) {
       return res.status(400).json({ message: "Username must be at least 4 characters" });
     }
 
-    const existingUser = await Users.findOne({ where: { email } });
+    const existingUser = await Users.findOne({ where: { email }});
+
+    const existingUsername = await Users.findOne({ where: { username } });
+    
     if (existingUser) {
         return res.status(400).json({ message: "User already exists" });
+    } else if (existingUsername) {
+        return res.status(400).json({ message: "Username already taken" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const wallet = generateWallet();
+    
     const hashedWalletAddress = await bcrypt.hash(wallet.publicKey, 10);
     const hashedWalletPrivateKey = await bcrypt.hash(wallet.secretKey, 10);
     const hashedWalletMnemonic = await bcrypt.hash(wallet.mnemonic, 10);
 
     try {
-        const wallet = generateWallet();
 
         const newUser = await Users.create({ 
             fullname, 
