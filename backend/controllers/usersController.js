@@ -19,8 +19,8 @@ async function usersCreation(req, res) {
       return res.status(400).json({ message: "Password must contain a number" });
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return res.status(400).json({ message: "Invalid email format" });
-    } else if (fullname.length < 4) {
-      return res.status(400).json({ message: "Fullname must be at least 4 characters" });
+    } else if (fullname.length < 5) {
+      return res.status(400).json({ message: "Fullname must be at least 5 characters" });
     } else if (username.length < 4) {
       return res.status(400).json({ message: "Username must be at least 4 characters" });
     }
@@ -31,6 +31,9 @@ async function usersCreation(req, res) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedWalletAddress = await bcrypt.hash(wallet.publicKey, 10);
+    const hashedWalletPrivateKey = await bcrypt.hash(wallet.secretKey, 10);
+    const hashedWalletMnemonic = await bcrypt.hash(wallet.mnemonic, 10);
 
     try {
         const wallet = generateWallet();
@@ -40,9 +43,9 @@ async function usersCreation(req, res) {
             username, 
             email, 
             password: hashedPassword,
-            wallet_address: wallet.publicKey,
-            wallet_private_key: wallet.secretKey,
-            wallet_mnemonic: wallet.mnemonic
+            wallet_address: hashedWalletAddress,
+            wallet_private_key: hashedWalletPrivateKey,
+            wallet_mnemonic: hashedWalletMnemonic
         });
 
         await leaderboard.create({
@@ -54,7 +57,7 @@ async function usersCreation(req, res) {
             rank: 0
         });
 
-        res.status(201).json({ success: true, message: "User created successfully" });
+        res.status(201).json({ success: true, message: "User created successfully", data: newUser });
 
     } catch (error) {
 
