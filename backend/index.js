@@ -11,9 +11,11 @@ app.use(express.urlencoded({ extended: true }));
 
 const db = require("./config/db");
 
-
 const userRoute = require('./routes/userRoute');
+const walletRoute = require('./routes/walletRoute');
+
 app.use('/auth', userRoute);
+app.use('/wallet', walletRoute);
 
 
 
