@@ -107,12 +107,14 @@ async function usersLogin(req, res) {
     { expiresIn: "72h" }
   );
 
+  const address = user.wallet_address;
+
 
     res.status(200).json({ 
       success: true, 
       message: "User logged in successfully",
       token: token,
-      // address: address
+      address: address
     });
 }
 
