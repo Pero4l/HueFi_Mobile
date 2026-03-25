@@ -1,4 +1,5 @@
 const { Users } = require("../models");
+const { decrypt } = require('../controllers/protect');
 
 async function getMnemonic(req, res) {
     try {

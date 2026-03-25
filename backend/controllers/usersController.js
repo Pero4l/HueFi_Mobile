@@ -64,13 +64,15 @@ async function usersCreation(req, res) {
             rank: 0
         });
 
-        res.status(201).json({ success: true, message: "User created successfully", data: newUser });
+        res.status(201).json({ success: true, message: "User created successfully"});
 
     } catch (error) {
 
         res.status(500).json({ success: false, message: "User creation failed", error: error.message });
     }
 } 
+
+
 
 
 
