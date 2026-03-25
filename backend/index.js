@@ -13,9 +13,11 @@ const db = require("./config/db");
 
 const userRoute = require('./routes/userRoute');
 const walletRoute = require('./routes/walletRoute');
+const settingRoute = require('./routes/settingRoute');
 
 app.use('/auth', userRoute);
 app.use('/wallet', walletRoute);
+app.use('/setting', settingRoute);
 
 
 
