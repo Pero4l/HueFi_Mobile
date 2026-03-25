@@ -22,6 +22,9 @@ module.exports = (sequelize, DataTypes) => {
     username: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
+    wallet_address: DataTypes.STRING,
+    wallet_private_key: DataTypes.STRING,
+    wallet_mnemonic: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Users',

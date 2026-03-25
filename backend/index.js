@@ -5,11 +5,13 @@ require('dotenv').config();
 
 
 const app = express();
-// app.use(express.json());
+app.use(express.json());
 // app.use(cors({ origin: "*" }));
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 const db = require("./config/db");
+const userRoute = require('./routes/userRoute');
+app.use('/api/users', userRoute);
 
 
 
@@ -24,7 +26,7 @@ app.get("/", (req, res) => {
 // DB CONNECTION
 const PORT = process.env.PORT;
 
-db.sync({ force: true, alter: false })
+db.sync({ force: false, alter: true })
   .then(async () => {
     
     app.listen(PORT, () => {

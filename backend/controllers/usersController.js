@@ -2,6 +2,7 @@ const { Users, leaderboard } = require("../models");
 const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const { generateWallet } = require("../utils/wallet");
 
 async function usersCreation(req, res) {
 
@@ -32,13 +33,23 @@ async function usersCreation(req, res) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-        const newUser = await Users.create({ fullname, username, email, password: hashedPassword });
+        const wallet = generateWallet();
+
+        const newUser = await Users.create({ 
+            fullname, 
+            username, 
+            email, 
+            password: hashedPassword,
+            wallet_address: wallet.publicKey,
+            wallet_private_key: wallet.secretKey,
+            wallet_mnemonic: wallet.mnemonic
+        });
 
         await leaderboard.create({
             user_id: newUser.id,
             fullname: newUser.fullname,
             username: newUser.username,
-            address: "",
+            address: wallet.publicKey,
             points: 0,
             rank: 0
         });
