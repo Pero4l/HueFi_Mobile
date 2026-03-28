@@ -1,7 +1,6 @@
 const express = require('express');
 
 require('dotenv').config();
-// const cors = require("cors");
 
 
 const app = express();
@@ -14,10 +13,12 @@ const db = require("./config/db");
 const userRoute = require('./routes/userRoute');
 const walletRoute = require('./routes/walletRoute');
 const settingRoute = require('./routes/settingRoute');
+const leaderboardRoute = require('./routes/leaderboardRoute');
 
 app.use('/auth', userRoute);
 app.use('/wallet', walletRoute);
 app.use('/setting', settingRoute);
+app.use('/', leaderboardRoute);
 
 
 
