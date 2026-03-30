@@ -6,8 +6,16 @@ require('dotenv').config();
 
 
 const app = express();
+
+// Comprehensive CORS configuration
+app.use(cors({ 
+  origin: "*", // During production, change this to your game's domain e.g., ["https://mygame.com"]
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+
 app.use(express.json());
-app.use(cors({ origin: "*" }));
 app.use(express.urlencoded({ extended: true }));
 
 const db = require("./config/db");
