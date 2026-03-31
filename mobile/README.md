@@ -1,50 +1,42 @@
-# Welcome to your Expo app 👋
+# HueFi Mobile App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is the mobile frontend for HueFi, a color staking and guessing application built with Expo and React Native.
 
-## Get started
+## Features
 
-1. Install dependencies
+- Color guessing game with 10-second countdown.
+- Multi-currency support (SOL and USD).
+- Real-time game history.
+- Premium dark mode interface.
+- Toast notifications for user feedback.
 
-   ```bash
-   npm install
-   ```
+## Installation
 
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+1. Install the dependencies:
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. Start the development server:
+```bash
+npx expo start
+```
 
-## Learn more
+## Available Scripts
 
-To learn more about developing your project with Expo, look at the following resources:
+- `npm start`: Starts the Expo development server.
+- `npm run ios`: Starts the app in the iOS simulator.
+- `npm run android`: Starts the app in the Android emulator.
+- `npm run lint`: Runs ESLint to check for code quality issues.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Project Structure
 
-## Join the community
+- `app/`: Contains the main application screens and layout using file-based routing.
+- `components/`: Reusable UI components.
+- `constants/`: Theme configuration and other constants.
+- `hooks/`: Custom React hooks for theme and state management.
+- `utils/`: API utilities and helper functions.
 
-Join our community of developers creating universal apps.
+## Development Note
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+The app is currently in testing mode. Every user is initialized with a balance of $1000 and 50 SOL.
