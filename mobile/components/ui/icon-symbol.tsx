@@ -18,6 +18,20 @@ const MAPPING = {
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
+  'gamecontroller.fill': 'videogame-asset',
+  'wallet.pass.fill': 'account-balance-wallet',
+  'trophy.fill': 'emoji-events',
+  'gearshape.fill': 'settings',
+  'bell.fill': 'notifications',
+  'speaker.wave.3.fill': 'volume-up',
+  'iphone.radiowaves.left.and.right': 'vibration',
+  'checkmark.circle.fill': 'check-circle',
+  'chart.bar.fill': 'bar-chart',
+  'lock.fill': 'security',
+  'info.circle.fill': 'info',
+  'arrow.down.circle.fill': 'arrow-downward',
+  'arrow.up.circle.fill': 'arrow-upward',
+  'person.fill': 'person',
 } as IconMapping;
 
 /**
